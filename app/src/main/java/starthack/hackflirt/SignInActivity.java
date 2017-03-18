@@ -174,9 +174,30 @@ public class SignInActivity extends AppCompatActivity implements
         mDatabase.child("user").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                String status = null;
                 if (!snapshot.exists()) {
                     writeNewUser(uid, familyName, givenName);
+                    status = "incomplete";
+
+                } else {
+                    for (DataSnapshot field : snapshot.getChildren()) {
+                        if (field.getKey().equals("status"))
+                            status = field.getValue(String.class);
+                    }
                 }
+
+                if (status.equals("incomplete")) {
+                    Intent intent = new Intent(SignInActivity.this, FillDetailsActivity.class);
+                    intent.putExtra("UID", uid);
+                    startActivity(intent);
+                    finish();
+                }
+//                else if (status.equals("pending_recording")) {
+//                    Intent intent = new Intent(SignInActivity.this, RecordingActivity.class);
+//                    intent.putExtra("UID", uid);
+//                    startActivity(intent);
+//                    finish();
+//                }
             }
 
             @Override

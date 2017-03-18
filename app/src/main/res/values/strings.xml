@@ -53,4 +53,10 @@
     <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
          from https://console.developers.google.com/ -->
     <string name="server_client_id">YOUR_SERVER_CLIENT_ID</string>
+    <string name="title_activity_fill_details">FillDetailsActivity</string>
+    <string name="male">male</string>
+    <string name="female">female</string>
+    <string name="males">males</string>
+    <string name="females">females</string>
+    <string name="both">both</string>
 </resources>
