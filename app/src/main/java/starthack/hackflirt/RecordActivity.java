@@ -5,12 +5,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.storage.FirebaseStorage;
@@ -42,36 +39,36 @@ public class RecordActivity extends AppCompatActivity {
 
         Set<String> sentences = SentenceGenerator.generateSentences(user);
 
-        ListView sentencesList = (ListView) findViewById(R.id.sentencesList);
-        ArrayAdapter adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_list_item_1,
-                sentences.toArray(new String[sentences.size()]));
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
 
-        sentencesList.setAdapter(adapter);
+        MyCustomAdapter adapter = new MyCustomAdapter(sentences);
+        recyclerView.setAdapter(adapter);
 
         mStorage = FirebaseStorage.getInstance().getReference();
 
-        mRecordLabel = (TextView) findViewById(R.id.recordLabel);
-        Button mRecordButton = (Button) findViewById(R.id.recordButton);
+//        mRecordLabel = (TextView) findViewById(R.id.recordLabel);
+//        Button mRecordButton = (Button) findViewById(R.id.recordButton);
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/tmp_audio.aac";
 
-        mRecordButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    startRecording();
-                    mRecordLabel.setText("Recording Started...");
-                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    stopRecording();
-                    mRecordLabel.setText("Recording Stoped...");
-
-                }
-                return false;
-            }
-        });
+//        mRecordButton.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//
+//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+//                    startRecording();
+//                    mRecordLabel.setText("Recording Started...");
+//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+//                    stopRecording();
+//                    mRecordLabel.setText("Recording Stoped...");
+//
+//                }
+//                return false;
+//            }
+//        });
     }
 
     private void startRecording() {

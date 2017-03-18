@@ -1,34 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="starthack.hackflirt.RecordActivity">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:scrollbars="vertical"
+        android:clipToPadding="false" />
 
-        <Button
-            android:id="@+id/recordButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tap and holb button for record"/>
-
-        <TextView
-            android:id="@+id/recordLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tap and holb button for record"
-            android:textAlignment="center"/>
-
-        <ListView
-            android:id="@+id/sentencesList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </ListView>
-    </LinearLayout>
-
-</android.support.constraint.ConstraintLayout>
+</android.support.design.widget.CoordinatorLayout>
