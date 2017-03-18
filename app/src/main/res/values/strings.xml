@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sign-In Quickstart</string>
+    <string name="app_name">HackFlirt</string>
     <string name="title_text">Google Sign-In\nQuickstart</string>
 
     <!-- Sign-in status messages -->
@@ -59,4 +59,5 @@
     <string name="males">males</string>
     <string name="females">females</string>
     <string name="both">both</string>
+    <string name="title_activity_record">RecordActivity</string>
 </resources>

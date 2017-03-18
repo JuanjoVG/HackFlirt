@@ -192,12 +192,12 @@ public class SignInActivity extends AppCompatActivity implements
                     startActivity(intent);
                     finish();
                 }
-//                else if (status.equals("pending_recording")) {
-//                    Intent intent = new Intent(SignInActivity.this, RecordingActivity.class);
-//                    intent.putExtra("UID", uid);
-//                    startActivity(intent);
-//                    finish();
-//                }
+                else if (status.equals("pending_recording")) {
+                    Intent intent = new Intent(SignInActivity.this, RecordActivity.class);
+                    intent.putExtra("UID", uid);
+                    startActivity(intent);
+                    finish();
+                }
             }
 
             @Override
