@@ -35,10 +35,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Activity to demonstrate basic retrieval of the Google user's ID, email address, and basic
- * profile.
- */
 public class SignInActivity extends AppCompatActivity implements
         GoogleApiClient.OnConnectionFailedListener,
         View.OnClickListener {
@@ -201,6 +197,11 @@ public class SignInActivity extends AppCompatActivity implements
                     finish();
                 } else if (status.equals("pending_recording")) {
                     Intent intent = new Intent(SignInActivity.this, RecordActivity.class);
+                    intent.putExtra("user", user);
+                    startActivity(intent);
+                    finish();
+                }else if (status.equals("complete")) {
+                    Intent intent = new Intent(SignInActivity.this, MatchActivity.class);
                     intent.putExtra("user", user);
                     startActivity(intent);
                     finish();

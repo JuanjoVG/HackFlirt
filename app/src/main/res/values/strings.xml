@@ -60,4 +60,5 @@
     <string name="females">females</string>
     <string name="both">both</string>
     <string name="title_activity_record">RecordActivity</string>
+    <string name="error_upload_record_msg">You have to record all sentences</string>
 </resources>

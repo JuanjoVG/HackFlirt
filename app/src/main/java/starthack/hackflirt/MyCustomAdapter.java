@@ -27,7 +27,7 @@ public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.ViewHo
 
     private MediaRecorder mRecorder;
 
-    public MyCustomAdapter(Set<String> sentences, Map<Integer, String> recordedFiles) {
+    public MyCustomAdapter(List<String> sentences, Map<Integer, String> recordedFiles) {
         list.addAll(sentences);
         this.recordedFiles = recordedFiles;
     }

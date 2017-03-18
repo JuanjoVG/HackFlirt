@@ -8,8 +8,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -24,6 +28,7 @@ import java.util.UUID;
 
 public class RecordActivity extends AppCompatActivity {
 
+    public static final String YOU_HAVE_TO_RECORD_ALL_SENTENCES = "You have to record all sentences";
     private TextView mRecordLabel;
 
     private User user;
@@ -31,34 +36,47 @@ public class RecordActivity extends AppCompatActivity {
     private static final String LOG_TAG = "Record_log";
 
     private StorageReference mStorage;
+    private Map<Integer, String> recordedFiles;
+    private DatabaseReference mDatabase;
+    private List<String> sentences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         user = getIntent().getParcelableExtra("user");
 
-        Set<String> sentences = SentenceGenerator.generateSentences(user);
+        sentences = SentenceGenerator.generateSentences(user);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        Map<Integer, String> recordedFiles = new HashMap<>();
+        recordedFiles = new HashMap<>();
         MyCustomAdapter adapter = new MyCustomAdapter(sentences, recordedFiles);
         recyclerView.setAdapter(adapter);
 
         mStorage = FirebaseStorage.getInstance().getReference();
     }
 
-    private void uploadAudio() {
-//        UUID uuid = new UUID(64, 64);
-//        String newFileName = uuid.randomUUID().toString() + ".aac";
-//        StorageReference filepath = mStorage.child("audio").child(newFileName);
-//        Uri uri = Uri.fromFile(new File(mFileName));
-//        filepath.putFile(uri);
+    public void uploadAudios(View view) {
+        if(sentences.size() == recordedFiles.size()) {
+            for (Map.Entry<Integer, String> entry : recordedFiles.entrySet()) {
+                UUID uuid = new UUID(64, 64);
+                String newFileCode = uuid.randomUUID().toString();
+                String newFilePath = newFileCode + ".aac";
+                StorageReference filepath = mStorage.child("audio").child(newFilePath);
+                Uri uri = Uri.fromFile(new File(entry.getValue()));
+                filepath.putFile(uri);
+                mDatabase.child("user").child(user.getUid()).child("audio").child(newFileCode).setValue(sentences.get(entry.getKey()));
+            }
+            mDatabase.child("user").child(user.getUid()).child("status").setValue("complete");
 
-        //mDatabase.child("user").child(uid).child("audio").child(newFileName).setValue(sentence);
+
+        } else {
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_upload_record_msg), Toast.LENGTH_LONG);
+        }
     }
 }
