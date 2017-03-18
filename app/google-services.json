@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "972552711730",
+    "firebase_url": "https://hackflirt.firebaseio.com",
+    "project_id": "hackflirt",
+    "storage_bucket": "hackflirt.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:972552711730:android:d13aebf62569fdee",
+        "android_client_info": {
+          "package_name": "starthack.hackflirt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "972552711730-sr5ttccikvuabstv0utfslmclhrhh88r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "starthack.hackflirt",
+            "certificate_hash": "40500eeac75baf99367ff8c43545382acf8b7662"
+          }
+        },
+        {
+          "client_id": "972552711730-nkavgc847rc94kf2hj7v9s6mkuop5o5n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "starthack.hackflirt",
+            "certificate_hash": "c9cf39c984f8569d29c221fc48d182f95771bf20"
+          }
+        },
+        {
+          "client_id": "972552711730-7vgvfoc0369hvt6lapf8g9572drolplv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUe3vAuCJDeaVTfPJupQ71AFn0LCyLZkE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "972552711730-7vgvfoc0369hvt6lapf8g9572drolplv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
