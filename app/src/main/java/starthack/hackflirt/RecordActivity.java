@@ -1,35 +1,33 @@
 package starthack.hackflirt;
 
-import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.Environment;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 import java.util.UUID;
 
 public class RecordActivity extends AppCompatActivity {
 
-    private Button mRecordButton;
     private TextView mRecordLabel;
 
     private MediaRecorder mRecorder;
     private String mFileName = null;
+    private User user;
 
     private static final String LOG_TAG = "Record_log";
 
@@ -40,10 +38,21 @@ public class RecordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_record);
 
+        user = getIntent().getParcelableExtra("user");
+
+        Set<String> sentences = SentenceGenerator.generateSentences(user);
+
+        ListView sentencesList = (ListView) findViewById(R.id.sentencesList);
+        ArrayAdapter adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_list_item_1,
+                sentences.toArray(new String[sentences.size()]));
+
+        sentencesList.setAdapter(adapter);
+
         mStorage = FirebaseStorage.getInstance().getReference();
 
         mRecordLabel = (TextView) findViewById(R.id.recordLabel);
-        mRecordButton = (Button) findViewById(R.id.recordButton);
+        Button mRecordButton = (Button) findViewById(R.id.recordButton);
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
         mFileName += "/tmp_audio.aac";
@@ -52,10 +61,10 @@ public class RecordActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
-                if(event.getAction() == MotionEvent.ACTION_DOWN){
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     startRecording();
                     mRecordLabel.setText("Recording Started...");
-                } else if(event.getAction() == MotionEvent.ACTION_UP){
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     stopRecording();
                     mRecordLabel.setText("Recording Stoped...");
 

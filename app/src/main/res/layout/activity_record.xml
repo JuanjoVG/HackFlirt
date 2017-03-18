@@ -23,6 +23,12 @@
             android:layout_height="wrap_content"
             android:text="Tap and holb button for record"
             android:textAlignment="center"/>
+
+        <ListView
+            android:id="@+id/sentencesList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

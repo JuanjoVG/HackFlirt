@@ -52,6 +52,7 @@ public class SignInActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
+    private User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -157,10 +158,10 @@ public class SignInActivity extends AppCompatActivity implements
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
 
-                        String uid = task.getResult().getUser().getUid();
-                        String givenName = acct.getGivenName();
-                        String familyName = acct.getFamilyName();
-                        createUserIfNotExists(uid, givenName, familyName);
+                        user.setUid(task.getResult().getUser().getUid());
+                        user.setName(acct.getGivenName());
+                        user.setSurname(acct.getFamilyName());
+                        createUserIfNotExists(user);
 
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
@@ -170,31 +171,37 @@ public class SignInActivity extends AppCompatActivity implements
                 });
     }
 
-    private void createUserIfNotExists(final String uid, final String givenName, final String familyName) {
-        mDatabase.child("user").child(uid).addListenerForSingleValueEvent(new ValueEventListener() {
+    private void createUserIfNotExists(final User user) {
+        mDatabase.child("user").child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 String status = null;
                 if (!snapshot.exists()) {
-                    writeNewUser(uid, familyName, givenName);
+                    writeNewUser(user);
                     status = "incomplete";
 
                 } else {
                     for (DataSnapshot field : snapshot.getChildren()) {
                         if (field.getKey().equals("status"))
                             status = field.getValue(String.class);
+                        if (field.getKey().equals("age"))
+                            user.setAge(Integer.valueOf(field.getValue(String.class)));
+                        if (field.getKey().equals("preference"))
+                            user.setPreference(field.getValue(String.class));
+                        if (field.getKey().equals("gender"))
+                            user.setGender(field.getValue(String.class));
                     }
                 }
 
+                assert status != null;
                 if (status.equals("incomplete")) {
                     Intent intent = new Intent(SignInActivity.this, FillDetailsActivity.class);
-                    intent.putExtra("UID", uid);
+                    intent.putExtra("user", user);
                     startActivity(intent);
                     finish();
-                }
-                else if (status.equals("pending_recording")) {
+                } else if (status.equals("pending_recording")) {
                     Intent intent = new Intent(SignInActivity.this, RecordActivity.class);
-                    intent.putExtra("UID", uid);
+                    intent.putExtra("user", user);
                     startActivity(intent);
                     finish();
                 }
@@ -304,14 +311,14 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
 
-    private void writeNewUser(String userId, String surname, String name) {
+    private void writeNewUser(User user) {
         Map<String, Object> postValues = new HashMap<>();
-        postValues.put("surname", surname);
-        postValues.put("name", name);
+        postValues.put("name", user.getName());
+        postValues.put("surname", user.getSurname());
         postValues.put("status", "incomplete");
 
         Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/user/" + userId, postValues);
+        childUpdates.put("/user/" + user.getUid(), postValues);
 
         mDatabase.updateChildren(childUpdates);
     }

@@ -1,10 +1,8 @@
 package starthack.hackflirt;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,22 +12,19 @@ import android.widget.Toast;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class FillDetailsActivity extends AppCompatActivity {
 
     private String gender;
     private String preference;
-    private String uid;
     private DatabaseReference mDatabase;
     private EditText age;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_details);
-        uid = getIntent().getStringExtra("UID");
+        user = getIntent().getParcelableExtra("user");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         age = (EditText) findViewById(R.id.age);
 
@@ -86,10 +81,16 @@ public class FillDetailsActivity extends AppCompatActivity {
             toast.show();
         }
         else {
-            mDatabase.child("user").child(uid).child("gender").setValue(gender);
-            mDatabase.child("user").child(uid).child("preference").setValue(preference);
-            mDatabase.child("user").child(uid).child("age").setValue(ageString);
-            mDatabase.child("user").child(uid).child("status").setValue("pending_recording");
+            mDatabase.child("user").child(user.getUid()).child("gender").setValue(gender);
+            mDatabase.child("user").child(user.getUid()).child("preference").setValue(preference);
+            mDatabase.child("user").child(user.getUid()).child("age").setValue(ageString);
+            mDatabase.child("user").child(user.getUid()).child("status").setValue("pending_recording");
+            user.setAge(Integer.valueOf(age.getText().toString()));
+            user.setGender(gender);
+            user.setPreference(preference);
+            Intent intent = new Intent(this, RecordActivity.class);
+            intent.putExtra("user", user);
+            startActivity(intent);
         }
     }
 
