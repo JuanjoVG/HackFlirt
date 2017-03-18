@@ -15,6 +15,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -22,8 +26,6 @@ public class RecordActivity extends AppCompatActivity {
 
     private TextView mRecordLabel;
 
-    private MediaRecorder mRecorder;
-    private String mFileName = null;
     private User user;
 
     private static final String LOG_TAG = "Record_log";
@@ -43,64 +45,19 @@ public class RecordActivity extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        MyCustomAdapter adapter = new MyCustomAdapter(sentences);
+        Map<Integer, String> recordedFiles = new HashMap<>();
+        MyCustomAdapter adapter = new MyCustomAdapter(sentences, recordedFiles);
         recyclerView.setAdapter(adapter);
 
         mStorage = FirebaseStorage.getInstance().getReference();
-
-//        mRecordLabel = (TextView) findViewById(R.id.recordLabel);
-//        Button mRecordButton = (Button) findViewById(R.id.recordButton);
-
-        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/tmp_audio.aac";
-
-//        mRecordButton.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//
-//                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//                    startRecording();
-//                    mRecordLabel.setText("Recording Started...");
-//                } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//                    stopRecording();
-//                    mRecordLabel.setText("Recording Stoped...");
-//
-//                }
-//                return false;
-//            }
-//        });
-    }
-
-    private void startRecording() {
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
-        mRecorder.setOutputFile(mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-
-        try {
-            mRecorder.prepare();
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "prepare() failed");
-        }
-
-        mRecorder.start();
-    }
-
-    private void stopRecording() {
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
-
-        uploadAudio();
     }
 
     private void uploadAudio() {
-        UUID uuid = new UUID(64, 64);
-        String newFileName = uuid.randomUUID().toString() + ".aac";
-        StorageReference filepath = mStorage.child("audio").child(newFileName);
-        Uri uri = Uri.fromFile(new File(mFileName));
-        filepath.putFile(uri);
+//        UUID uuid = new UUID(64, 64);
+//        String newFileName = uuid.randomUUID().toString() + ".aac";
+//        StorageReference filepath = mStorage.child("audio").child(newFileName);
+//        Uri uri = Uri.fromFile(new File(mFileName));
+//        filepath.putFile(uri);
 
         //mDatabase.child("user").child(uid).child("audio").child(newFileName).setValue(sentence);
     }
