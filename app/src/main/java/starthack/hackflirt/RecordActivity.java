@@ -21,6 +21,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 
 public class RecordActivity extends AppCompatActivity {
 
@@ -45,7 +46,7 @@ public class RecordActivity extends AppCompatActivity {
         mRecordButton = (Button) findViewById(R.id.recordButton);
 
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/recorded_Audio.aac";
+        mFileName += "/tmp_audio.aac";
 
         mRecordButton.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -89,8 +90,12 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     private void uploadAudio() {
-        StorageReference filepath = mStorage.child("audio").child("new_audio.aac");
+        UUID uuid = new UUID(64, 64);
+        String newFileName = uuid.randomUUID().toString() + ".aac";
+        StorageReference filepath = mStorage.child("audio").child(newFileName);
         Uri uri = Uri.fromFile(new File(mFileName));
         filepath.putFile(uri);
+
+        //mDatabase.child("user").child(uid).child("audio").child(newFileName).setValue(sentence);
     }
 }
