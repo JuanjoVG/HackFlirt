@@ -15,4 +15,14 @@ public class SentenceGenerator {
         sentences.add("As you can hear I am a " + user.getGender());
         return sentences;
     }
+
+    public static List<String> getSentenceSubject() {
+        List<String> subjects = new ArrayList<>();
+        subjects.add("Name");
+        subjects.add("Surname");
+        subjects.add("Age");
+        subjects.add("Preference");
+        subjects.add("Gender");
+        return subjects;
+    }
 }
