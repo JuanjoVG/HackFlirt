@@ -179,6 +179,8 @@ public class SignInActivity extends AppCompatActivity implements
                             user.setPreference(field.getValue(String.class));
                         if (field.getKey().equals("gender"))
                             user.setGender(field.getValue(String.class));
+                        if (field.getKey().equals("city"))
+                            user.setCity(field.getValue(String.class));
                     }
                 }
 

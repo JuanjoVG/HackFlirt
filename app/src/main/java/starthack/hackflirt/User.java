@@ -11,6 +11,7 @@ public class User implements Parcelable {
     private Integer age;
     private String gender;
     private String preference;
+    private String city;
 
     public User() {
 
@@ -64,6 +65,14 @@ public class User implements Parcelable {
         this.preference = preference;
     }
 
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
     protected User(Parcel in) {
         uid = in.readString();
         name = in.readString();
@@ -71,6 +80,7 @@ public class User implements Parcelable {
         age = in.readByte() == 0x00 ? null : in.readInt();
         gender = in.readString();
         preference = in.readString();
+        city = in.readString();
     }
 
     @Override
@@ -91,6 +101,7 @@ public class User implements Parcelable {
         }
         dest.writeString(gender);
         dest.writeString(preference);
+        dest.writeString(city);
     }
 
     @SuppressWarnings("unused")

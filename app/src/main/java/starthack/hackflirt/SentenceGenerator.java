@@ -11,8 +11,9 @@ public class SentenceGenerator {
         sentences.add("My friends know me as " + user.getName());
         sentences.add("My surname is " + user.getSurname());
         sentences.add("I am " + user.getAge() + " years old");
-        sentences.add("In fact I prefer " + user.getPreference() + " gender");
+        sentences.add("Now I am living in " + user.getCity());
         sentences.add("As you can hear I am a " + user.getGender());
+        sentences.add("In fact I prefer " + user.getPreference() + " gender");
         return sentences;
     }
 

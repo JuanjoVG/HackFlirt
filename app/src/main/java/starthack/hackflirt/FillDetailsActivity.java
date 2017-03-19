@@ -15,6 +15,7 @@ public class FillDetailsActivity extends AppCompatActivity {
 
     private String gender;
     private String preference;
+    private EditText city;
     private DatabaseReference mDatabase;
     private EditText age;
     private User user;
@@ -26,6 +27,7 @@ public class FillDetailsActivity extends AppCompatActivity {
         user = getIntent().getParcelableExtra("user");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         age = (EditText) findViewById(R.id.age);
+        city = (EditText) findViewById(R.id.city);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -60,6 +62,7 @@ public class FillDetailsActivity extends AppCompatActivity {
     public void submit(View v) {
 
         String ageString = age.getText().toString();
+        String cityString = city.getText().toString();
         if (gender == null) {
             Toast toast = Toast.makeText(getApplicationContext(), "Gender was not introduced", Toast.LENGTH_SHORT);
             toast.show();
@@ -72,12 +75,18 @@ public class FillDetailsActivity extends AppCompatActivity {
             Toast toast = Toast.makeText(getApplicationContext(), "Age was not introduced", Toast.LENGTH_SHORT);
             toast.show();
         }
+        else if (cityString.trim().equals("")) {
+            Toast toast = Toast.makeText(getApplicationContext(), "City was not introduced", Toast.LENGTH_SHORT);
+            toast.show();
+        }
         else {
             mDatabase.child("user").child(user.getUid()).child("gender").setValue(gender);
             mDatabase.child("user").child(user.getUid()).child("preference").setValue(preference);
             mDatabase.child("user").child(user.getUid()).child("age").setValue(ageString);
+            mDatabase.child("user").child(user.getUid()).child("city").setValue(cityString);
             mDatabase.child("user").child(user.getUid()).child("status").setValue("pending_recording");
             user.setAge(Integer.valueOf(age.getText().toString()));
+            user.setCity(cityString);
             user.setGender(gender);
             user.setPreference(preference);
             Intent intent = new Intent(this, RecordActivity.class);
