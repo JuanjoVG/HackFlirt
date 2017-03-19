@@ -33,17 +33,23 @@ import java.util.Map;
 public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener {
 
     private DatabaseReference mDatabase;
+    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     private User user;
     private Map<String, Object> proposedUsers = new HashMap<>();
+    private Map<Integer, Boolean> mapBadAudio;
 
     private RelativeLayout mProgressBar;
+
     private RecyclerView mRecyclerAudio;
 
     private FloatingActionButton mFabSkip;
     private FloatingActionButton mFabLike;
     private TextView mUserInfo;
     private ImageView userImage;
+
+    private String nextUid;
+    private Map<String, Object> nextUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +101,9 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
             setVisibilityListAndButtons(View.INVISIBLE);
             mUserInfo.setText(R.string.no_suggestions);
         } else {
-            String nextUid = (String) proposedUsers.keySet().toArray()[0];
+            nextUid = (String) proposedUsers.keySet().toArray()[0];
+            nextUser = (Map<String, Object>) proposedUsers.get(nextUid);
+
             StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://hackflirt.appspot.com");
             StorageReference pathReference = storageRef.child("image/" + nextUid);
             File localFile = null;
@@ -115,7 +123,6 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
                         }
                     });
 
-            Map<String, Object> nextUser = (Map<String, Object>) proposedUsers.get(nextUid);
             proposedUsers.remove(nextUid);
             Map<String, Object> audiosMap = (Map<String, Object>) nextUser.get("audio");
             List<String> audios = new ArrayList<>();
@@ -133,7 +140,8 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
             mRecyclerAudio.setLayoutManager(layoutManager);
 
-            AudioAdapter adapter = new AudioAdapter(SentenceGenerator.getSentenceSubject(), audios);
+            mapBadAudio = new HashMap<>();
+            AudioAdapter adapter = new AudioAdapter(SentenceGenerator.getSentenceSubject(), audios, mapBadAudio);
             mRecyclerAudio.setAdapter(adapter);
         }
     }
@@ -145,11 +153,31 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
     }
 
     public void skip(View view) {
+        updateAudioScore();
         updateView();
     }
 
     public void like(View view) {
+        updateAudioScore();
         updateView();
+    }
+
+    private void updateAudioScore() {
+        Map<String, Object> audiosMap = (Map<String, Object>) nextUser.get("audio");
+
+        List<String> audios = new ArrayList<>();
+        for (String audio : audiosMap.keySet()) {
+            audios.add(audio);
+        }
+
+        for (String audio : audiosMap.keySet()) {
+            int pos = audios.indexOf(audio);
+            if (mapBadAudio.containsKey(pos) && mapBadAudio.get(pos)) {
+                Map<String, Object> audioMap = (Map<String, Object>) audiosMap.get(audio);
+                Integer oldScore = (Integer) audioMap.get("negScore");
+                mDatabase.child("user").child(nextUid).child("audio").child(audio).child("negScore").setValue(oldScore + 1);
+            }
+        }
     }
 
     private boolean isValidUser(String gender, String preference, String status) {

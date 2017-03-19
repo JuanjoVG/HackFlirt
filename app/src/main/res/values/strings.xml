@@ -65,4 +65,5 @@
     <string name="skip">Skip</string>
     <string name="match">Match</string>
     <string name="no_suggestions">Any suggestion available</string>
+    <string name="bad_audio">Bad</string>
 </resources>

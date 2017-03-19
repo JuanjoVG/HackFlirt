@@ -9,8 +9,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -19,16 +20,19 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> {
 
+    private Map<Integer, Boolean> badAudios;
     private List<String> sentences;
     private List<String> audios;
 
-    public AudioAdapter(List<String> sentenceSubject, List<String> audios) {
+    public AudioAdapter(List<String> sentenceSubject, List<String> audios, Map<Integer, Boolean> badAudios) {
         sentences = sentenceSubject;
         this.audios = audios;
+        this.badAudios = badAudios;
     }
 
     @Override
@@ -43,8 +47,8 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(AudioAdapter.ViewHolder holder, final int position) {
-        TextView sentence = (TextView) holder.view.findViewById(R.id.list_audio_string);
-        sentence.setText(sentences.get(position));
+        //TextView sentence = (TextView) holder.view.findViewById(R.id.list_audio_string);
+        //sentence.setText(sentences.get(position));
 
         final ImageButton playImage = (ImageButton) holder.view.findViewById(R.id.play_audio);
 
@@ -77,6 +81,14 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> 
                 return false;
             }
         });
+
+        final CheckBox checkBadAudio = (CheckBox) holder.view.findViewById(R.id.bad_audio);
+        checkBadAudio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                badAudios.put(position, isChecked);
+            }
+        });
     }
 
     @Override
@@ -91,6 +103,5 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> 
             super(v);
             view = v;
         }
-
     }
 }

@@ -58,7 +58,9 @@ public class RecordActivity extends AppCompatActivity {
                 StorageReference filepath = mStorage.child("audio").child(newFilePath);
                 Uri uri = Uri.fromFile(new File(entry.getValue()));
                 filepath.putFile(uri);
-                mDatabase.child("user").child(user.getUid()).child("audio").child(newFileCode).setValue(sentences.get(entry.getKey()));
+                DatabaseReference audioReference = mDatabase.child("user").child(user.getUid()).child("audio").child(newFileCode);
+                audioReference.child("sentence").setValue(sentences.get(entry.getKey()));
+                audioReference.child("negScore").setValue(0);
             }
             mDatabase.child("user").child(user.getUid()).child("status").setValue("complete");
 
