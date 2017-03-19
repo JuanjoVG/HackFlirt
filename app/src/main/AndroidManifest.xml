@@ -27,7 +27,9 @@
             android:name=".RecordActivity"
             android:label="Record your voice">
         </activity>
-        <activity android:name=".MatchActivity">
+        <activity
+            android:name=".MatchActivity"
+            android:label="Find your partner">
 
         </activity>
     </application>

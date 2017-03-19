@@ -134,7 +134,7 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
 
             String name = (String) nextUser.get("name");
             String age = (String) nextUser.get("age");
-            String userInfo = name + ", " + age + " years";
+            String userInfo = name + ", " + age;
             mUserInfo.setText(userInfo);
 
             LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -147,6 +147,7 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
     }
 
     private void setVisibilityListAndButtons(int visibility) {
+        userImage.setVisibility(visibility);
         mRecyclerAudio.setVisibility(visibility);
         mFabLike.setVisibility(visibility);
         mFabSkip.setVisibility(visibility);
@@ -174,7 +175,7 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
             int pos = audios.indexOf(audio);
             if (mapBadAudio.containsKey(pos) && mapBadAudio.get(pos)) {
                 Map<String, Object> audioMap = (Map<String, Object>) audiosMap.get(audio);
-                Integer oldScore = (Integer) audioMap.get("negScore");
+                Long oldScore = (Long) audioMap.get("negScore");
                 mDatabase.child("user").child(nextUid).child("audio").child(audio).child("negScore").setValue(oldScore + 1);
             }
         }
