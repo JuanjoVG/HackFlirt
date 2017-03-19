@@ -61,10 +61,11 @@ public class RecordActivity extends AppCompatActivity {
                 mDatabase.child("user").child(user.getUid()).child("audio").child(newFileCode).setValue(sentences.get(entry.getKey()));
             }
             mDatabase.child("user").child(user.getUid()).child("status").setValue("complete");
-            Intent intent = new Intent(this, MatchActivity.class);
+
+            Intent intent = new Intent(getApplicationContext(), MatchActivity.class);
             intent.putExtra("user", user);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK|Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
-            finish();
         } else {
             Toast.makeText(this, getResources().getString(R.string.error_upload_record_msg), Toast.LENGTH_LONG).show();
         }
