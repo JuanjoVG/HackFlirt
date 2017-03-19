@@ -1,5 +1,7 @@
 package starthack.hackflirt;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -7,15 +9,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +33,6 @@ import java.util.Map;
 public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPreparedListener {
 
     private DatabaseReference mDatabase;
-    private MediaPlayer mMediaPlayer = new MediaPlayer();
 
     private User user;
     private Map<String, Object> proposedUsers = new HashMap<>();
@@ -35,6 +43,7 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
     private FloatingActionButton mFabSkip;
     private FloatingActionButton mFabLike;
     private TextView mUserInfo;
+    private ImageView userImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +86,8 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
 
         mFabSkip = (FloatingActionButton) findViewById(R.id.fab_skip);
         mFabLike = (FloatingActionButton) findViewById(R.id.fab_like);
+
+        userImage = (ImageView) findViewById(R.id.user_image);
     }
 
     private void updateView() {
@@ -85,6 +96,25 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
             mUserInfo.setText(R.string.no_suggestions);
         } else {
             String nextUid = (String) proposedUsers.keySet().toArray()[0];
+            StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://hackflirt.appspot.com");
+            StorageReference pathReference = storageRef.child("image/" + nextUid);
+            File localFile = null;
+            try {
+                localFile = File.createTempFile("images", "jpg");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            final File finalLocalFile = localFile;
+            pathReference.getFile(localFile).addOnSuccessListener(
+                    new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            Bitmap bitmap = BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath());
+                            Bitmap blur = BlurBuilder.blur(getApplicationContext(), bitmap);
+                            userImage.setImageBitmap(blur);
+                        }
+                    });
+
             Map<String, Object> nextUser = (Map<String, Object>) proposedUsers.get(nextUid);
             proposedUsers.remove(nextUid);
             Map<String, Object> audiosMap = (Map<String, Object>) nextUser.get("audio");

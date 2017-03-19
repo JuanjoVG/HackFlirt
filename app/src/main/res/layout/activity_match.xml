@@ -32,6 +32,12 @@
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline"
             android:layout_marginTop="10dp" />
 
+        <ImageView
+            android:id="@+id/user_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/ic_menu_report_image" />
+
     </LinearLayout>
 
 
