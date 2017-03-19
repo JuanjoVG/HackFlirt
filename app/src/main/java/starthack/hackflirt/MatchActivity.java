@@ -68,32 +68,6 @@ public class MatchActivity extends AppCompatActivity implements MediaPlayer.OnPr
             public void onCancelled(DatabaseError databaseError) {
             }
         });
-
-//
-//        StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://hackflirt.appspot.com");
-//        StorageReference pathReference = storageRef.child("audio/8f088e92-c0f1-46eb-a37f-d0599b781ee9.aac");
-//
-//        pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-//            @Override
-//            public void onSuccess(Uri uri) {
-//                try {
-//                    // Download url of file
-//                    final String url = uri.toString();
-//                    mMediaPlayer.setDataSource(url);
-//                    // wait for media player to get prepare
-//                    mMediaPlayer.setOnPreparedListener(MatchActivity.this);
-//                    mMediaPlayer.prepareAsync();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Log.i("TAG", e.getMessage());
-//            }
-//        });
     }
 
     private void initViews() {

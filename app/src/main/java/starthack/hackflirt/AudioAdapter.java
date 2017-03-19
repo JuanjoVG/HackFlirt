@@ -1,6 +1,10 @@
 package starthack.hackflirt;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -8,6 +12,12 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.IOException;
 import java.util.List;
 
 
@@ -32,7 +42,7 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(AudioAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(AudioAdapter.ViewHolder holder, final int position) {
         TextView sentence = (TextView) holder.view.findViewById(R.id.list_audio_string);
         sentence.setText(sentences.get(position));
 
@@ -42,6 +52,27 @@ public class AudioAdapter extends RecyclerView.Adapter<AudioAdapter.ViewHolder> 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl("gs://hackflirt.appspot.com");
+                    StorageReference pathReference = storageRef.child("audio/" + audios.get(position) + ".aac");
+
+                    pathReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            MediaPlayer mediaPlayer = new MediaPlayer();
+                            try {
+                                mediaPlayer.setDataSource(uri.toString());
+                                mediaPlayer.prepare();
+                                mediaPlayer.start();
+                            } catch (IOException e) {
+                            }
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.i("TAG", e.getMessage());
+                        }
+                    });
                 }
                 return false;
             }
