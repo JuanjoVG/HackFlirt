@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -27,13 +26,6 @@ public class FillDetailsActivity extends AppCompatActivity {
         user = getIntent().getParcelableExtra("user");
         mDatabase = FirebaseDatabase.getInstance().getReference();
         age = (EditText) findViewById(R.id.age);
-
-        final Button button = (Button) findViewById(R.id.submit);
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                submit();
-            }
-        });
     }
 
     public void onRadioButtonClicked(View view) {
@@ -65,7 +57,7 @@ public class FillDetailsActivity extends AppCompatActivity {
         }
     }
 
-    public void submit() {
+    public void submit(View v) {
 
         String ageString = age.getText().toString();
         if (gender == null) {

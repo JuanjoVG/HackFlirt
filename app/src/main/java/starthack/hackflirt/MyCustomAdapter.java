@@ -2,7 +2,6 @@ package starthack.hackflirt;
 
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,15 +10,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.ViewHolder> {
     private ArrayList<String> list = new ArrayList<>();
@@ -65,15 +61,16 @@ public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.ViewHo
         playImage.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN){
-                    Log.d("PLAY","Pressed play button");
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    Log.d("PLAY", "Pressed play button");
 
                     MediaPlayer mediaPlayer = new MediaPlayer();
                     try {
                         mediaPlayer.setDataSource(recordedFiles.get(position));
                         mediaPlayer.prepare();
                         mediaPlayer.start();
-                    } catch (IOException e) {}
+                    } catch (IOException e) {
+                    }
                 }
                 return false;
             }
@@ -93,7 +90,8 @@ public class MyCustomAdapter extends RecyclerView.Adapter<MyCustomAdapter.ViewHo
 
         try {
             mRecorder.prepare();
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
 
         mRecorder.start();
     }

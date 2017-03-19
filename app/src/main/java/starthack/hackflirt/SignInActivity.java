@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -18,7 +17,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -46,21 +44,16 @@ public class SignInActivity extends AppCompatActivity implements
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private GoogleApiClient mGoogleApiClient;
-    private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
     private User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Views
-        mStatusTextView = (TextView) findViewById(R.id.status);
+        setContentView(R.layout.activity_sign_in);
 
         // Button listeners
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         // [START configure_signin]
         // Configure sign-in to request the user's ID, email address, and basic
@@ -190,21 +183,28 @@ public class SignInActivity extends AppCompatActivity implements
                 }
 
                 assert status != null;
-                if (status.equals("incomplete")) {
-                    Intent intent = new Intent(SignInActivity.this, FillDetailsActivity.class);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
-                    finish();
-                } else if (status.equals("pending_recording")) {
-                    Intent intent = new Intent(SignInActivity.this, RecordActivity.class);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
-                    finish();
-                }else if (status.equals("complete")) {
-                    Intent intent = new Intent(SignInActivity.this, MatchActivity.class);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
-                    finish();
+                switch (status) {
+                    case "incomplete": {
+                        Intent intent = new Intent(SignInActivity.this, FillDetailsActivity.class);
+                        intent.putExtra("user", user);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    }
+                    case "pending_recording": {
+                        Intent intent = new Intent(SignInActivity.this, RecordActivity.class);
+                        intent.putExtra("user", user);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    }
+                    case "complete": {
+                        Intent intent = new Intent(SignInActivity.this, MatchActivity.class);
+                        intent.putExtra("user", user);
+                        startActivity(intent);
+                        finish();
+                        break;
+                    }
                 }
             }
 
@@ -215,7 +215,6 @@ public class SignInActivity extends AppCompatActivity implements
         });
     }
 
-    // [START onActivityResult]
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -226,15 +225,12 @@ public class SignInActivity extends AppCompatActivity implements
             handleSignInResult(result);
         }
     }
-    // [END onActivityResult]
 
-    // [START handleSignInResult]
     private void handleSignInResult(GoogleSignInResult result) {
         Log.d(TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
-            mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             updateUI(true);
             firebaseAuthWithGoogle(acct);
         } else {
@@ -242,28 +238,11 @@ public class SignInActivity extends AppCompatActivity implements
             updateUI(false);
         }
     }
-    // [END handleSignInResult]
 
-    // [START signIn]
     private void signIn() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-    // [END signIn]
-
-    // [START signOut]
-    private void signOut() {
-        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                new ResultCallback<Status>() {
-                    @Override
-                    public void onResult(Status status) {
-                        // [START_EXCLUDE]
-                        updateUI(false);
-                        // [END_EXCLUDE]
-                    }
-                });
-    }
-    // [END signOut]
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
@@ -291,12 +270,8 @@ public class SignInActivity extends AppCompatActivity implements
     private void updateUI(boolean signedIn) {
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.VISIBLE);
         } else {
-            mStatusTextView.setText(R.string.signed_out);
-
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_and_disconnect).setVisibility(View.GONE);
         }
     }
 
@@ -305,9 +280,6 @@ public class SignInActivity extends AppCompatActivity implements
         switch (v.getId()) {
             case R.id.sign_in_button:
                 signIn();
-                break;
-            case R.id.sign_out_button:
-                signOut();
                 break;
         }
     }

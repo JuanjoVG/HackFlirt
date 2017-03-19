@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="starthack.hackflirt.FillDetailsActivity">
+    android:fitsSystemWindows="false"
+    tools:context=".FillDetailsActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10dp"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Give some details to find an appropriate partner for you"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I am" />
+            android:layout_marginTop="10dp"
+            android:text="I am..."
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -28,21 +41,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onRadioButtonClicked"
-                android:text="@string/male" />
+                android:text="@string/male"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
             <RadioButton
                 android:id="@+id/radio_female"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onRadioButtonClicked"
-                android:text="@string/female" />
+                android:text="@string/female"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
         </RadioGroup>
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I prefer" />
+            android:layout_marginTop="10dp"
+            android:text="I prefer..."
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -54,43 +71,55 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onRadioButtonClicked"
-                android:text="@string/males" />
+                android:text="@string/males"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
             <RadioButton
                 android:id="@+id/radio_females"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onRadioButtonClicked"
-                android:text="@string/females" />
+                android:text="@string/females"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
 
             <RadioButton
                 android:id="@+id/radio_both"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="onRadioButtonClicked"
-                android:text="@string/both" />
+                android:text="@string/both"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
         </RadioGroup>
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I have" />
+            android:layout_marginTop="10dp"
+            android:text="I have..."
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Headline" />
 
         <EditText
             android:id="@+id/age"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:hint="\? years old"
             android:inputType="number"
-            android:maxLength="2"
-            android:hint="\? years old"/>
+            android:maxLength="2" />
 
-        <Button
-            android:id="@+id/submit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit"/>
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:onClick="submit"
+        android:src="@drawable/check"
+        app:backgroundTint="@color/accent"
+        app:borderWidth="0dp"
+        app:fabSize="normal" />
+
+</android.support.design.widget.CoordinatorLayout>
