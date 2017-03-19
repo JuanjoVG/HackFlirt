@@ -14,9 +14,10 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class FillDetailsActivity extends AppCompatActivity {
@@ -26,9 +27,11 @@ public class FillDetailsActivity extends AppCompatActivity {
     private String preference;
     private EditText city;
     private DatabaseReference mDatabase;
+    private StorageReference mStorage;
     private EditText age;
     private User user;
     private ImageView imageView;
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,7 @@ public class FillDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fill_details);
         user = getIntent().getParcelableExtra("user");
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        mStorage = FirebaseStorage.getInstance().getReference();
         age = (EditText) findViewById(R.id.age);
         city = (EditText) findViewById(R.id.city);
         imageView = (ImageView) findViewById(R.id.imageView);
@@ -60,15 +64,11 @@ public class FillDetailsActivity extends AppCompatActivity {
 
         if (resultCode == RESULT_OK) {
             try {
-                final Uri imageUri = data.getData();
+                imageUri = data.getData();
                 final InputStream imageStream = getContentResolver().openInputStream(imageUri);
                 final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-//                Bitmap orientedImage = BlurBuilder.modifyOrientation(selectedImage, imageUri.getPath());
-                Bitmap blur = BlurBuilder.blur(this, selectedImage);
-                imageView.setImageBitmap(blur);
+                imageView.setImageBitmap(selectedImage);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -122,7 +122,12 @@ public class FillDetailsActivity extends AppCompatActivity {
         } else if (cityString.trim().equals("")) {
             Toast toast = Toast.makeText(getApplicationContext(), "City was not introduced", Toast.LENGTH_SHORT);
             toast.show();
-        } else {
+        }
+        else if (imageUri == null) {
+            Toast toast = Toast.makeText(getApplicationContext(), "No photo was selected", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else {
             mDatabase.child("user").child(user.getUid()).child("gender").setValue(gender);
             mDatabase.child("user").child(user.getUid()).child("preference").setValue(preference);
             mDatabase.child("user").child(user.getUid()).child("age").setValue(ageString);
@@ -132,6 +137,9 @@ public class FillDetailsActivity extends AppCompatActivity {
             user.setCity(cityString);
             user.setGender(gender);
             user.setPreference(preference);
+
+            StorageReference filePath = mStorage.child("image").child(user.getUid());
+            filePath.putFile(imageUri);
             Intent intent = new Intent(this, RecordActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);
