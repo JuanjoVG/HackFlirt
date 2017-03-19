@@ -64,6 +64,7 @@ public class RecordActivity extends AppCompatActivity {
             Intent intent = new Intent(this, MatchActivity.class);
             intent.putExtra("user", user);
             startActivity(intent);
+            finish();
         } else {
             Toast.makeText(this, getResources().getString(R.string.error_upload_record_msg), Toast.LENGTH_LONG).show();
         }

@@ -22,8 +22,9 @@ public class SentenceGenerator {
         subjects.add("Name");
         subjects.add("Surname");
         subjects.add("Age");
-        subjects.add("Preference");
+        subjects.add("City");
         subjects.add("Gender");
+        subjects.add("Preference");
         return subjects;
     }
 }
